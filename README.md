@@ -3,10 +3,8 @@
 
 1- Upload the "modules/registrars/gandiv5" folder to your whmcs install "modules/registrars" folder.
 
-2- Upload the "resources/domains/additionalfields.php" folder to your whmcs install "resources/domains/" folder. If the file already exists you have to copy the content into the original file.
+2- Enable the Gandi.net registrar in "setup->products->domain registrars".
 
-5- Enable the Gandi.net registrar in "setup->products->domain registrars".
-
-6- Set the production "API key" provided by your  the gandi.net reseller panel.
+3- Set the production "API key" provided by your  the gandi.net reseller panel.
 
 
