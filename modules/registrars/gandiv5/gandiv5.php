@@ -51,7 +51,7 @@ function gandiv5_getConfigArray()
         // Friendly display name for the module
         'FriendlyName' => array(
             'Type' => 'System',
-            'Value' => 'Gandi V5',
+            'Value' => 'Gandi Registrar Module for WHMCS( V5 API)',
         ),
         'apiKey' => array(
             'FriendlyName' => 'Api Key',
@@ -108,7 +108,7 @@ function gandiv5_RegisterDomain($params)
         "email" => $params["email"],
         "address" => $params["address1"],
         "city" => $params["city"],
-        "state" => $params["countrycode"] . '-' . $params["statecode"],
+        "state" => substr( $params["countrycode"] . '-' . $params["statecode"],0,6 ),
         "postcode" =>  $params["postcode"],
         "countrycode" => $params["countrycode"],
         "countryname" => $params["countryname"],
@@ -116,7 +116,6 @@ function gandiv5_RegisterDomain($params)
         "phonecountrcCode" => $params["phonecc"],
         "phonenumberformatted" => $params['phonenumberformatted']
     ];
-
     $apiKey = $params['API Key'];
     $registrationPeriod = $params['regperiod'];
     $domain = $sld . '.' . $tld;
@@ -129,9 +128,9 @@ function gandiv5_RegisterDomain($params)
             ];
         }
         $response = $api->registerDomain($domain, $contacts, $nameservers, $registrationPeriod);
-        if ((isset($request->code) && $request->code != 202)|| isset($request->errors)) {
+        if ((isset($response->code) && $response->code != 202)|| isset($response->errors)) {
             return array(
-                   'error' => json_encode($response->errors)
+                   'error' => json_encode($response)
               );
         }
 
@@ -198,7 +197,13 @@ function gandiv5_TransferDomain($params)
     $authCode = $params['transfersecret'];
     try {
         $api = new ApiClient($params["apiKey"]);
-        $request = $api->transferDomain($domain, $contacts, $nameservers, $registrationPeriod, $authCode);
+        $response = $api->transferDomain($domain, $contacts, $nameservers, $registrationPeriod, $authCode);
+        if ((isset($response->code) && $response->code != 202)|| isset($response->errors)) {
+            return array(
+                    'error' => json_encode($response)
+               );
+        }
+
         return array(
             'success' => true,
         );
@@ -234,7 +239,13 @@ function gandiv5_RenewDomain($params)
     $domain = $sld . '.' . $tld;
     try {
         $api = new ApiClient($params["apiKey"]);
-        $request = $api->renewDomain($domain, $registrationPeriod);
+        $response = $api->renewDomain($domain, $registrationPeriod);
+        if ((isset($response->code) && $response->code != 202)|| isset($response->errors)) {
+            return array(
+                    'error' => json_encode($response)
+               );
+        }
+
         $response = [
              'success' => true,
          ];
