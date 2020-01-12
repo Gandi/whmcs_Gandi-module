@@ -108,7 +108,6 @@ function gandiv5_RegisterDomain($params)
         "email" => $params["email"],
         "address" => $params["address1"],
         "city" => $params["city"],
-        "state" => substr( $params["countrycode"] . '-' . $params["statecode"],0,6 ),
         "postcode" =>  $params["postcode"],
         "countrycode" => $params["countrycode"],
         "countryname" => $params["countryname"],
