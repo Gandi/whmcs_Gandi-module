@@ -45,8 +45,19 @@ function gandiv5_MetaData()
  *
  * @return array
  */
-function gandiv5_getConfigArray()
+function gandiv5_getConfigArray($params)
 {
+    try{
+        $api = new ApiClient($params["apiKey"]);
+        $organizationList = [];
+        $organizations = $api->getOrganizations();
+        if( is_array($organizations) ){
+            foreach($organizations as $organization){
+                $organizationsList[$organization->id] = $organization->name;
+            }
+        }
+    }catch(Exception $e){
+    }
     return array(
         // Friendly display name for the module
         'FriendlyName' => array(
@@ -58,6 +69,21 @@ function gandiv5_getConfigArray()
             'Type' => 'password',
             'Size' => '100',
         ),
+        'accountType' => [
+            'FriendlyName' => 'Account type',
+            'Type' => 'dropdown',
+            'Options' => array(
+                'individual' => 'Pay as individual',
+                'organization' => 'Pay as another organization',
+                'reseller' => 'Reseller',
+            ),
+        ],
+        'organization' => [
+             'FriendlyName' => 'Organization',
+             'Type' => 'dropdown',
+             'Options' => $organizationsList,
+         ],
+
     );
 }
 
@@ -79,7 +105,11 @@ function gandiv5_getConfigArray()
  */
 function gandiv5_RegisterDomain($params)
 {
-
+    if( $params['accountType'] == 'individual' ){
+        $organization = '';
+    }else{
+        $organization = $params['organization'];
+    }
     // registration parameters
     $sld = $params['sld'];
     $tld = $params['tld'];
@@ -126,7 +156,7 @@ function gandiv5_RegisterDomain($params)
                 'error' => $availability
             ];
         }
-        $response = $api->registerDomain($domain, $contacts, $nameservers, $registrationPeriod);
+        $response = $api->registerDomain($domain, $contacts, $nameservers, $registrationPeriod, $organization);
         if ((isset($response->code) && $response->code != 202)|| isset($response->errors)) {
             return array(
                    'error' => json_encode($response)

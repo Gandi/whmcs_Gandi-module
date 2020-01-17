@@ -16,7 +16,7 @@ class ApiClient
         return json_decode($response);
     }
     
-    public function registerDomain($domain, $contacts, $nameservers, $period)
+    public function registerDomain($domain, $contacts, $nameservers, $period, $organization = '')
     {
         foreach ($nameservers as $k => $v) {
             if (!$v) {
@@ -24,6 +24,9 @@ class ApiClient
             }
         }
         $url = "{$this->endPoint}/domain/domains";
+        if( $organization ){
+            $url .= "?sharing_id={$organization}";
+        }
         $owner = [
             "city" => $contacts["owner"]["city"],
             "given" => $contacts["owner"]["firstname"],
@@ -367,6 +370,22 @@ class ApiClient
         $url = "{$this->endPoint}/domain/domains/{$domain}/livedns";
         $response = $this->sendRequest($url, "POST");
         logModuleCall('Gandi V5', 'Enable LiveDNS', $domain, $response);
+        return json_decode($response);
+    }
+
+
+    /*
+    *
+    * List organizations
+    *
+    * @return array
+    *
+    */
+
+    public function getOrganizations(){
+        $url = "{$this->endPoint}/organization/organizations";
+        $response = $this->sendRequest($url, "GET");
+        logModuleCall('Gandi V5', 'List organizations', $domain, $response);
         return json_decode($response);
     }
 }
