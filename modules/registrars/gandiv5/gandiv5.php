@@ -266,9 +266,14 @@ function gandiv5_RenewDomain($params)
     $tld = $params['tld'];
     $registrationPeriod = $params['regperiod'];
     $domain = $sld . '.' . $tld;
+    if( $params['accountType'] == 'individual' ){
+        $organization = '';
+    }else{
+        $organization = $params['organization'];
+    }
     try {
         $api = new ApiClient($params["apiKey"]);
-        $response = $api->renewDomain($domain, $registrationPeriod);
+        $response = $api->renewDomain($domain, $registrationPeriod, $organization);
         if ((isset($response->code) && $response->code != 202)|| isset($response->errors)) {
             return array(
                     'error' => json_encode($response)

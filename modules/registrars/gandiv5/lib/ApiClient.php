@@ -172,12 +172,16 @@ class ApiClient
     * @return array
     *
     */
-    public function renewDomain(string $domain, $period = 1)
+    public function renewDomain(string $domain, $period = 1,string $organization = '')
     {
         $url = "{$this->endPoint}/domain/domains/{$domain}/renew";
+        if( $organization ){
+             $url .= "?sharing_id={$organization}";
+        }
         $params = [
             'duration' => $period
         ];
+
         $response = $this->sendRequest($url, "POST", $params);
         logModuleCall('Gandi V5', 'Domain renew', $domain, $response);
         return json_decode($response);
