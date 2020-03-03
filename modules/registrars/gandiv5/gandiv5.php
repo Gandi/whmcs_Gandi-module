@@ -804,3 +804,34 @@ function gandiv5_ClientArea($params)
 
     return $output;
 }
+
+/**
+ * Request EEP Code.
+ *
+ * Supports both displaying the EPP Code directly to a user or indicating
+ * that the EPP Code will be emailed to the registrant.
+ *
+ * @param array $params common module parameters
+ *
+ * @see https://developers.whmcs.com/domain-registrars/module-parameters/
+ *
+ * @return array
+ *
+ */
+function gandiv5_GetEPPCode($params)
+{
+    try {
+        $domain = $params['domainname'];
+        $api = new ApiClient($params["apiKey"]);
+        $request = $api->getDomainInfo($domain);
+        return array(
+                'eppcode' => $request->authinfo,
+            );
+        
+    } catch (\Exception $e) {
+        return array(
+            'error' => $e->getMessage(),
+        );
+    }
+
+}
