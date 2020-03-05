@@ -739,6 +739,11 @@ function gandiv5_Sync($params)
         $domain = $params['domain'];
         $api = new ApiClient($params["apiKey"]);
         $request = $api->getDomainInfo($domain);
+        if ($request->code == 403) { // Transfered away
+            return array(
+                'transferredAway' => true
+            );
+        }
         if ($request->code != 404) {
             $expired = (strtotime($request->dates->registry_ends_at) < time())?true:false;
             return array(
