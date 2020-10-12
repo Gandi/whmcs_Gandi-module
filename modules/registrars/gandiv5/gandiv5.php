@@ -189,10 +189,6 @@ function gandiv5_RegisterDomain($params)
  */
 function gandiv5_TransferDomain($params)
 {
-    return [
-        'error' => 'Transfer not supported by V5 API'
-    ];
-
     $apiKey = $params['API Key'];
     $sld = $params['sld'];
     $tld = $params['tld'];
