@@ -4,7 +4,7 @@ namespace WHMCS\Module\Registrar\Gandiv5;
 
 class LiveDNS
 {
-    const ENDPOINT = 'https://dns.api.gandi.net/api/v5/';
+    const ENDPOINT = 'https://api.gandi.net/v5/livedns/';
     private $apiKey;
 
 
@@ -39,7 +39,7 @@ class LiveDNS
              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
              CURLOPT_CUSTOMREQUEST => $method,
              CURLOPT_HTTPHEADER => array(
-                 "X-Api-Key: {$this->apiKey}",
+                 "authorization: Apikey {$this->apiKey}",
                  "content-type: application/json"
              ),
              CURLINFO_HEADER_OUT => true
