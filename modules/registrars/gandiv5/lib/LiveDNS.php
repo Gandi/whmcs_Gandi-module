@@ -42,6 +42,7 @@ class LiveDNS
                  "X-Api-Key: {$this->apiKey}",
                  "content-type: application/json"
              ),
+             CURLOPT_USERAGENT => 'WHMCS/1.1',
              CURLINFO_HEADER_OUT => true
          ));
         if ($method == "POST") {
