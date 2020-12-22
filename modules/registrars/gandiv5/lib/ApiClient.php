@@ -50,14 +50,17 @@ class ApiClient
         return json_decode($response);
     }
 
-    public function transferDomain($domain, $contacts, $nameservers, $period, $authCode)
+    public function transferDomain($domain, $contacts, $nameservers, $period, $authCode, $organization = '')
     {
         foreach ($nameservers as $k => $v) {
             if (!$v) {
                 unset($nameservers[$k]);
             }
         }
-        $url = "{$this->endPoint}/domain/domains";
+        $url = "{$this->endPoint}/domain/transferin";
+        if( $organization ){
+            $url .= "?sharing_id={$organization}";
+        }
         $owner = [
             "city" => $contacts["owner"]["city"],
             "given" => $contacts["owner"]["firstname"],
@@ -74,7 +77,8 @@ class ApiClient
             "fqdn" => $domain,
             "duration" => $period,
             "owner" => $owner,
-            "nameservers" => $nameservers
+            "nameservers" => $nameservers,
+            "authinfo" => $authCode
         ];
         $response = $this->sendRequest($url, "POST", $params);
         logModuleCall('Gandi V5', 'Domain transfer', $params, $response);
