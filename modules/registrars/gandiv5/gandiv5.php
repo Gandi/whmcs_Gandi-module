@@ -201,7 +201,6 @@ function gandiv5_TransferDomain($params)
         "email" => $params["email"],
         "address" => $params["address1"],
         "city" => $params["city"],
-        "state" => $params["countrycode"] . '-' . $params["statecode"],
         "postcode" =>  $params["postcode"],
         "countrycode" => $params["countrycode"],
         "countryname" => $params["countryname"],
@@ -209,6 +208,12 @@ function gandiv5_TransferDomain($params)
         "phonecountrcCode" => $params["phonecc"],
         "phonenumberformatted" => $params['phonenumberformatted']
     ];
+
+    if( $params['accountType'] == 'individual' ){
+        $organization = '';
+    }else{
+        $organization = $params['organization'];
+    }
 
     $nameservers = [
         $params['ns1'],
@@ -222,7 +227,7 @@ function gandiv5_TransferDomain($params)
     $authCode = $params['transfersecret'];
     try {
         $api = new ApiClient($params["apiKey"]);
-        $response = $api->transferDomain($domain, $contacts, $nameservers, $registrationPeriod, $authCode);
+        $response = $api->transferDomain($domain, $contacts, $nameservers, $registrationPeriod, $authCode, $organization);
         if ((isset($response->code) && $response->code != 202)|| isset($response->errors)) {
             return array(
                     'error' => json_encode($response)
