@@ -23,7 +23,7 @@ function gandiv5_MetaData()
 {
     return array(
         'DisplayName' => 'Gandi Registrar Module for WHMCS( V5 API)',
-        'APIVersion' => '1.1',
+        'APIVersion' => '1.2',
     );
 }
 
