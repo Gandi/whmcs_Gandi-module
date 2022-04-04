@@ -39,6 +39,10 @@ class ApiClient
             "type" => 0, // 0=person, 1=company, 2=association, 3=public body, 4=reseller
             "email" => $contacts["owner"]["email"]
         ];
+        if (in_array($owner['country'], ['GF', 'GP', 'MQ', 'RE', 'YT'])) {
+            $owner['state'] = 'FR-'.$owner['country'];
+            $owner['country'] = 'FR';
+        }
         $params = [
             "fqdn" => $domain,
             "duration" => $period,
@@ -73,6 +77,10 @@ class ApiClient
             "type" => 0, // 0=person, 1=company, 2=association, 3=public body, 4=reseller
             "email" => $contacts["owner"]["email"]
         ];
+        if (in_array($owner['country'], ['GF', 'GP', 'MQ', 'RE', 'YT'])) {
+            $owner['state'] = 'FR-'.$owner['country'];
+            $owner['country'] = 'FR';
+        }
         $params = [
             "fqdn" => $domain,
             "duration" => $period,
