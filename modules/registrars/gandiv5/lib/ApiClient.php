@@ -27,18 +27,7 @@ class ApiClient
         if( $organization ){
             $url .= "?sharing_id={$organization}";
         }
-        $owner = [
-            "city" => $contacts["owner"]["city"],
-            "given" => $contacts["owner"]["firstname"],
-            "family" => $contacts["owner"]["lastname"],
-            "zip" => $contacts["owner"]["postcode"],
-            "country" => $contacts["owner"]["countrycode"],
-            "streetaddr" => $contacts["owner"]["address"],
-            "phone" => $contacts["owner"]["phonenumberformatted"],
-            "state" => $contacts["owner"]["state"],
-            "type" => 0, // 0=person, 1=company, 2=association, 3=public body, 4=reseller
-            "email" => $contacts["owner"]["email"]
-        ];
+        $owner = $this->generateOwner($domain, $contacts);
         $params = [
             "fqdn" => $domain,
             "duration" => $period,
@@ -61,18 +50,7 @@ class ApiClient
         if( $organization ){
             $url .= "?sharing_id={$organization}";
         }
-        $owner = [
-            "city" => $contacts["owner"]["city"],
-            "given" => $contacts["owner"]["firstname"],
-            "family" => $contacts["owner"]["lastname"],
-            "zip" => $contacts["owner"]["postcode"],
-            "country" => $contacts["owner"]["countrycode"],
-            "streetaddr" => $contacts["owner"]["address"],
-            "phone" => $contacts["owner"]["phonenumberformatted"],
-            "state" => $contacts["owner"]["state"],
-            "type" => 0, // 0=person, 1=company, 2=association, 3=public body, 4=reseller
-            "email" => $contacts["owner"]["email"]
-        ];
+        $owner = $this->generateOwner($domain, $contacts);
         $params = [
             "fqdn" => $domain,
             "duration" => $period,
@@ -95,6 +73,27 @@ class ApiClient
             $result .= mb_substr($chars, $index, 1);
         }
         return $result;
+    }
+
+    private function generateOwner($domain, $contacts) {
+        $owner = [
+            "city" => $contacts["owner"]["city"],
+            "orgname" => $contacts["owner"]["orgname"],
+            "given" => $contacts["owner"]["firstname"],
+            "family" => $contacts["owner"]["lastname"],
+            "zip" => $contacts["owner"]["postcode"],
+            "country" => $contacts["owner"]["countrycode"],
+            "streetaddr" => $contacts["owner"]["address"],
+            "phone" => $contacts["owner"]["phonenumberformatted"],
+            "state" => $contacts["owner"]["state"],
+            "type" => (empty($contacts["owner"]["orgname"]) ? 'individual' : 'company'), // One of: "individual", "company", "association", "publicbody", "reseller"
+            "email" => $contacts["owner"]["email"]
+        ];
+        if (in_array($owner['country'], ['GF', 'GP', 'MQ', 'RE', 'YT'])) {
+            $owner['state'] = 'FR-'.$owner['country'];
+            $owner['country'] = 'FR';
+        }
+        return $owner;
     }
 
     public function __construct($apiKey, $testMode=true)
