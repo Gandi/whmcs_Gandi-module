@@ -143,7 +143,8 @@ function gandiv5_RegisterDomain($params)
         "countryname" => $params["countryname"],
         "phonenumber" => $params["phonenumber"],
         "phonecountrcCode" => $params["phonecc"],
-        "phonenumberformatted" => $params['phonenumberformatted']
+        "phonenumberformatted" => $params['phonenumberformatted'],
+        "orgname" => $params['companyname']
     ];
     $apiKey = $params['API Key'];
     $registrationPeriod = $params['regperiod'];
@@ -206,7 +207,8 @@ function gandiv5_TransferDomain($params)
         "countryname" => $params["countryname"],
         "phonenumber" => $params["phonenumber"],
         "phonecountrcCode" => $params["phonecc"],
-        "phonenumberformatted" => $params['phonenumberformatted']
+        "phonenumberformatted" => $params['phonenumberformatted'],
+        "orgname" => $params['companyname']
     ];
 
     if( $params['accountType'] == 'individual' ){
