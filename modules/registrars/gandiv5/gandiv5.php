@@ -845,3 +845,48 @@ function gandiv5_GetEPPCode($params)
     }
 
 }
+
+/**
+ * Sync Transfer Status & Expiration Date.
+ *
+ * Transfer syncing is intended to ensure transfer status and expiry date
+ * changes made directly at the domain registrar are synced to WHMCS.
+ * It is called periodically for a transfer.
+ *
+ * @param array $params common module parameters
+ *
+ * @see https://developers.whmcs.com/domain-registrars/module-parameters/
+ *
+ * @return array
+ */
+function gandiv5_TransferSync($params)
+{
+    try {
+        $domain = $params['domain'];
+        $api = new ApiClient($params["apiKey"]);
+        $request = $api->getDomainInfo($domain);
+        if ($request->code == 403 || $request->code == 404) { // not finished
+            return array(
+                'completed' => false,
+                'failed' => false
+            );
+        }
+        if ($request->code != 404) {
+            $expired = (strtotime($request->dates->registry_ends_at) < time())?true:false;
+            return array(
+                'expirydate' => date("Y-m-d", strtotime($request->dates->registry_ends_at)),
+                'completed' => true, // Return true if the transfer is completed
+                'failed' => false,
+                'reason' => '',
+                'error' => ''
+            );
+        }
+    } catch (\Exception $e) {
+        return array(
+            'failed' => true,
+            'completed' => false,
+            'reason' => 'Transfer Error',
+            'error' => $e->getMessage()
+        );
+    }
+}
