@@ -76,6 +76,16 @@ class ApiClient
     }
 
     private function generateOwner($domain, $contacts) {
+
+        // One of: "en", "es", "fr", "ja", "zh-hans", "zh-hant"
+        $languages_mapping = [
+            'english' => 'en',
+            'spanish' => 'es',
+            'french' => 'fr',
+            'japanese' => 'ja',
+            'chinese' => 'zh-hant',
+        ];
+
         $owner = [
             "city" => $contacts["owner"]["city"],
             "orgname" => $contacts["owner"]["orgname"],
@@ -92,6 +102,9 @@ class ApiClient
         if (in_array($owner['country'], ['GF', 'GP', 'MQ', 'RE', 'YT'])) {
             $owner['state'] = 'FR-'.$owner['country'];
             $owner['country'] = 'FR';
+        }
+        if (isset($languages_mapping[$contacts["owner"]["language"]])) {
+         $owner['lang'] = $languages_mapping[$contacts["owner"]["language"]];
         }
         return $owner;
     }
