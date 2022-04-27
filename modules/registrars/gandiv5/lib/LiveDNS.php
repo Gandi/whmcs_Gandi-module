@@ -42,7 +42,7 @@ class LiveDNS
                  "authorization: Apikey {$this->apiKey}",
                  "content-type: application/json"
              ),
-             CURLOPT_USERAGENT => 'WHMCS/1.2',
+             CURLOPT_USERAGENT => 'WHMCS/1.3',
              CURLINFO_HEADER_OUT => true
          ));
         if ($method == "POST") {
