@@ -744,12 +744,16 @@ function gandiv5_Sync($params)
         $domain = $params['domain'];
         $api = new ApiClient($params["apiKey"]);
         $request = $api->getDomainInfo($domain);
-        if ($request->code == 403) { // Transfered away
+        $code = 200; // default code because not set by API when everything is fine
+        if (isset($request->code)) {
+            $code = $request->code;
+        }
+        if (in_array($code, [403, 404])) { // Transfered away
             return array(
                 'transferredAway' => true
             );
         }
-        if ($request->code != 404) {
+        if (!in_array($code, [401, 403, 404])) {
             $expired = (strtotime($request->dates->registry_ends_at) < time())?true:false;
             return array(
                 'expirydate' => date("Y-m-d", strtotime($request->dates->registry_ends_at)),
